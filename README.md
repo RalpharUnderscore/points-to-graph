@@ -1,6 +1,7 @@
 # points-to-graph
-Desmos Links:
-- Exponential: https://www.desmos.com/calculator/5locqtqeb2
+Quick Access (Desmos Links):
+- Linear Graph: https://www.desmos.com/calculator/vkslovkrmq
+- Exponential Graph: https://www.desmos.com/calculator/miidz66htn
 
 
 Create different graphs from two points
