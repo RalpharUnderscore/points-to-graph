@@ -9,8 +9,8 @@ from PIL import ImageTk, Image
 
 root = tk.Tk()
 root.title("Simple Graph Generator")
-root.geometry("380x400")
-root.resizable(False, False)
+root.geometry("390x400")
+root.resizable(True, True)
 
 try:
     PROGRAM_ICON = ImageTk.PhotoImage(Image.open("placeholder.jpg"))
@@ -40,19 +40,13 @@ def ReadPointValues():
     else:
         graph_parameters = exp.CreateExponentialGraph(point_one, point_two)
 
+    plotpy.plt.close()
     plotpy.GenerateGraph(graph_parameters, point_one, point_two, mode)
 
 
-        
-
-
-
-    
-
-
-
 # Create Frames
-frame_generator = tk.LabelFrame(root, text="Graph Generator")
+frame_generator = tk.LabelFrame(root, text="Graph Generation")
+frame_plotting = tk.LabelFrame(root, text="Point Plotting")
 
 # Graph Generator, Create Entries
 gen_entry_x1 = tk.Entry(frame_generator, width=7)
@@ -62,7 +56,7 @@ gen_entry_x2 = tk.Entry(frame_generator, width=7)
 gen_entry_y2 = tk.Entry(frame_generator, width=7)
 
 # Graph Generator, Create and Grid Radiobuttons
-GRAPHTYPE = ["Linear", "Exponential"]
+GRAPHTYPE = ["Linear", "Exponential (y>0)"]
 selected_graphtype = tk.StringVar()
 selected_graphtype.set("Linear")
 
@@ -70,7 +64,7 @@ for x in GRAPHTYPE:
     gen_graphtype = tk.Radiobutton(frame_generator, text=x, variable=selected_graphtype, value=x).grid(row=GRAPHTYPE.index(x)+3,column=0, columnspan=2, sticky="w")
 
 # Graph Generator, Create Generate Graph Button
-gen_generate_button = tk.Button(frame_generator, text="Generate \nGraph", bg="#7abfff", activebackground="#7abfff", height=2, width=13, command=ReadPointValues)
+gen_generate_button = tk.Button(frame_generator, text="Generate \nNew Graph", bg="#7abfff", activebackground="#7abfff", height=2, width=13, command=ReadPointValues)
 
 # Grid Links
 tk.Label(root, text=" ").grid(row=0, column=0, pady=5)
@@ -80,6 +74,7 @@ tk.Button(root, text="Exponential Graph", bg="#60d15c", activebackground="#60d15
 
 # Grid Frames
 frame_generator.grid(row=1, column=0, columnspan=99, padx=10, pady=5)
+frame_plotting.grid(row=2, column=0, columnspan=99, padx=10, pady=5)
 
 # Graph Generator, Grid Label
 tk.Label(frame_generator, text="Point 1:", anchor="w").grid(row=0, column=0, padx=8, pady=5)
@@ -106,10 +101,8 @@ gen_entry_y2.grid(row=1, column=6, pady=2)
 gen_generate_button.grid(row=3, column=5, columnspan=3, rowspan=2, sticky="w")
 
 
-'''
-x = np.linspace(0.9919, 2.5)
-plt.plot(x, x**2)
-plt.show()
-'''
 
+
+
+# The Hog Rider card is unlocked from the Spell Valley (Arena 5). He is a very fast building-targeting, melee troop with moderately high hitpoints and damage. He appears just like his Clash of Clans counterpart; a man with brown eyebrows, a beard, a mohawk, and a golden body piercing in his left ear who is riding a hog. A Hog Rider card costs 4 Elixir to deploy.
 root.mainloop()

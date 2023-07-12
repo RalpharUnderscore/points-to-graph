@@ -3,6 +3,7 @@ import numpy as np
 
 def GenerateGraph(graph_parameters, point_one, point_two, mode):
     
+    plt.figure("Graph")
     x = np.linspace(point_one[0], point_two[0])
 
     if mode == "Linear":
@@ -11,6 +12,7 @@ def GenerateGraph(graph_parameters, point_one, point_two, mode):
         y = ExpGraph(graph_parameters, x)
 
     plt.plot(x, y)
+    plt.ion()
     plt.show()
 
 def LinGraph(graph_parameters, x):
