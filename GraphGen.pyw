@@ -1,10 +1,11 @@
 import webbrowser
 
+import _exp as exp
+import _lin as lin
+import _plot as plotpy
+
 import tkinter as tk
 from PIL import ImageTk, Image
-
-import matplotlib.pyplot as plt
-import numpy as np
 
 root = tk.Tk()
 root.title("Simple Graph Generator")
@@ -16,6 +17,38 @@ try:
     root.iconphoto(True, PROGRAM_ICON)
 except FileNotFoundError: # So stubborn
     pass
+
+# Retrieve the point values the user input
+def ReadPointValues():
+    flagError = False
+    try:
+        x1 = float(gen_entry_x1.get())
+        y1 = float(gen_entry_y1.get())
+        x2 = float(gen_entry_x2.get())
+        y2 = float(gen_entry_y2.get())
+    except:
+        flagError = True
+
+    if flagError: return
+
+    point_one = (x1, y1)
+    point_two = (x2, y2)
+
+    mode = selected_graphtype.get()
+    if mode == "Linear":
+        graph_parameters = lin.CreateLinearGraph(point_one, point_two)
+    else:
+        graph_parameters = exp.CreateExponentialGraph(point_one, point_two)
+
+    plotpy.GenerateGraph(graph_parameters, point_one, point_two, mode)
+
+
+        
+
+
+
+    
+
 
 
 # Create Frames
@@ -37,13 +70,13 @@ for x in GRAPHTYPE:
     gen_graphtype = tk.Radiobutton(frame_generator, text=x, variable=selected_graphtype, value=x).grid(row=GRAPHTYPE.index(x)+3,column=0, columnspan=2, sticky="w")
 
 # Graph Generator, Create Generate Graph Button
-gen_generate_button = tk.Button(frame_generator, text="Generate \nGraph", bg="#7abfff", activebackground="#7abfff", height=2, width=13)
+gen_generate_button = tk.Button(frame_generator, text="Generate \nGraph", bg="#7abfff", activebackground="#7abfff", height=2, width=13, command=ReadPointValues)
 
 # Grid Links
 tk.Label(root, text=" ").grid(row=0, column=0, pady=5)
 tk.Button(root, text="Github", bg="#343634", fg="#ffffff", activebackground="#343634", activeforeground="#ffffff", command=lambda: webbrowser.open("https://github.com/RalpharUnderscore/simple-graph-gen")).grid(row=0, column=1, sticky="sw")
 tk.Button(root, text="Linear Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/kwi1uxjyev")).grid(row=0, column=2, sticky="sw")
-tk.Button(root, text="Expo Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/ggrnu5cx7x")).grid(row=0, column=3, sticky="sw")
+tk.Button(root, text="Exponential Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/ggrnu5cx7x")).grid(row=0, column=3, sticky="sw")
 
 # Grid Frames
 frame_generator.grid(row=1, column=0, columnspan=99, padx=10, pady=5)
