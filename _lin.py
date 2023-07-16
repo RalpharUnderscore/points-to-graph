@@ -7,12 +7,19 @@ def Find_m(point_one, point_two):
     # The formula for gradient is (y2-y1)/(x2-x1)
     numerator = point_two[1] - point_one[1]
     denominator = point_two[0] - point_one[0]
-    return numerator/denominator
+    try:
+        return numerator/denominator
+    except ZeroDivisionError:
+        return "Error"
     
 def CreateLinearGraph(point_one, point_two):
     m = Find_m(point_one, point_two)
-    c = Find_c(point_one, m)
-    return (round(m, 8), round(c, 8)) # Prevent floating point shenanigans
+    if m != "Error":
+        c = Find_c(point_one, m)
+        return (round(m, 8), round(c, 8)) # Prevent floating point shenanigans
+    else:
+        return "Error"
+    
 
 
 

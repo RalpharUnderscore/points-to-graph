@@ -9,8 +9,9 @@ from PIL import ImageTk, Image
 
 root = tk.Tk()
 root.title("Graph Generator")
-root.geometry("380x380")
-root.resizable(True, True)
+root.geometry("380x370")
+root.resizable(False, False)
+
 
 try:
     PROGRAM_ICON = ImageTk.PhotoImage(Image.open("placeholder.jpg"))
@@ -61,6 +62,13 @@ def ConsToggleGraphType():
         cons_entry_m["state"] = "disabled"
         cons_entry_c["state"] = "disabled"
 
+
+def CalculateButton():
+    inputtype = selected_inputtype.get()
+    if inputtype == "Points": ReadPointValues()
+    else: ReadConstantValues()
+
+
 # Retrieve the point values the user input
 def ReadPointValues():
     flagError = False
@@ -69,8 +77,14 @@ def ReadPointValues():
         y1 = float(twop_entry_y1.get())
         x2 = float(twop_entry_x2.get())
         y2 = float(twop_entry_y2.get())
-    except:
+        
+        domain_start = float(dom_entry_from.get())
+        domain_end = float(dom_entry_to.get())
+
+        domain = (domain_start, domain_end)
+    except ValueError:
         flagError = True
+
 
     if flagError: return
 
@@ -80,16 +94,26 @@ def ReadPointValues():
     mode = selected_graphtype_twop.get()
     if mode == "Linear":
         graph_parameters = lin.CreateLinearGraph(point_one, point_two)
+        if graph_parameters == "Error": return
     else:
         graph_parameters = exp.CreateExponentialGraph(point_one, point_two)
+        if graph_parameters == "Error": return
 
     plotpy.plt.close()
-    plotpy.GenerateGraph(graph_parameters, point_one, point_two, mode)
+    plotpy.GenerateGraph(graph_parameters, mode, domain)
+
+def ReadConstantValues(): # TODO: Calculate for Read Constant Values
+    graphtype = selected_graphtype_cons.get()
+    if graphtype == "Linear":
+        pass
+
 
 
 # Create Frames
 frame_twopoint = tk.LabelFrame(root)
 frame_constants = tk.LabelFrame(root)
+frame_domain = tk.LabelFrame(root, borderwidth=0)
+frame_links = tk.LabelFrame(root, borderwidth=0)
 
 # Create Input Type Radio Buttons
 INPUTTYPE = ["Points", "Constants"]
@@ -97,7 +121,7 @@ selected_inputtype = tk.StringVar()
 selected_inputtype.set("Points")
 
 for x in INPUTTYPE:
-    tk.Radiobutton(root, text=x, variable=selected_inputtype, value=x, command=ToggleInputTypes).grid(row=INPUTTYPE.index(x)*2+1,column=0, columnspan=99, sticky="w")
+    tk.Radiobutton(root, text=x, variable=selected_inputtype, value=x, command=ToggleInputTypes).grid(row=INPUTTYPE.index(x)*2+1,column=0, columnspan=1, sticky="w")
 
 # Two Point Generators, Create Entries
 twop_entry_x1 = tk.Entry(frame_twopoint, width=7)
@@ -128,22 +152,28 @@ for x in GRAPHTYPE:
     tk.Radiobutton(frame_constants, text=f"{x}:", variable=selected_graphtype_cons, value=x, command=ConsToggleGraphType).grid(row=0,column=GRAPHTYPE.index(x)*4, sticky="w")
     
 
-# Constant Generators, Create and Grid Radio Buttons
+# root, Grid entry for domain settings
+dom_entry_from = tk.Entry(frame_domain, width=7)
+dom_entry_to = tk.Entry(frame_domain, width=7)
+
 
 
 # Create Generate Graph Button
-#generate_button = tk.Button(frame_twopoint, text="Generate \nNew Graph", bg="#7abfff", activebackground="#7abfff", height=2, width=13, command=ReadPointValues)
+generate_button = tk.Button(frame_domain, text="Generate New Graph", height=2, bg="#7abfff", activebackground="#7abfff", command=CalculateButton)
 
 # Grid Links
-tk.Label(root, text=" Graph Generator by Ralphar", font="TkDefaultFont 7 bold", anchor="sw").grid(row=0, column=0, pady=3)
-tk.Button(root, text="Linear Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/kwi1uxjyev")).grid(row=0, column=1, sticky="se")
-tk.Button(root, text="Exponential Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/ggrnu5cx7x")).grid(row=0, column=2, sticky="se")
-tk.Button(root, text="Github", bg="#343634", fg="#ffffff", activebackground="#343634", activeforeground="#ffffff", command=lambda: webbrowser.open("https://github.com/RalpharUnderscore/simple-graph-gen")).grid(row=0, column=3, sticky="se")
+tk.Button(frame_links, text="Linear Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/kwi1uxjyev")).grid(row=1, column=0, padx=1, pady=5, sticky="e")
+tk.Button(frame_links, text="Exponential Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/ggrnu5cx7x")).grid(row=1, column=1, padx=1, pady=5, sticky="e")
+tk.Button(frame_links, text="Github", bg="#343634", fg="#ffffff", activebackground="#343634", activeforeground="#ffffff", command=lambda: webbrowser.open("https://github.com/RalpharUnderscore/simple-graph-gen")).grid(row=1, column=2, padx=1, pady=5, sticky="e")
 
 
 # Grid Frames
-frame_twopoint.grid(row=2, column=0, columnspan=99, padx=10, pady=5)
-frame_constants.grid(row=4, column=0, columnspan=99, padx=10, pady=5)
+# NOTE TO SELF: Just put everything into frames, it's much easier to organize
+frame_links.grid(row=1, column=8, sticky="e", padx=10)
+frame_twopoint.grid(row=2, column=0, columnspan=10, padx=10, pady=5)
+frame_constants.grid(row=4, column=0, columnspan=10, padx=10, pady=5)
+frame_domain.grid(row=5, column=0, columnspan=10, padx=10, sticky="w")
+
 
 # Two Point Generators, Grid Label
 tk.Label(frame_twopoint, text="Point 1:", anchor="w").grid(row=0, column=0, padx=8, pady=5)
@@ -176,9 +206,15 @@ tk.Label(frame_constants, text=" ", anchor="w").grid(row=0, column=3, padx=30)
 tk.Label(frame_constants, text=" ", anchor="w").grid(row=0, column=7, padx=7)
 tk.Label(frame_constants, text=" ", anchor="w").grid(row=4, column=0)
 
-# root, Grid Label
-tk.Label(root, text="Domain: From", anchor="w").grid(row=5, column=0, sticky="w", padx=4)
+# Frame Domain
+tk.Label(frame_domain, text="Domain: from", anchor="w").grid(row=0, column=0, sticky="nsw", padx=4)
+tk.Label(frame_domain, text=" to ", anchor="w").grid(row=0, column=2, sticky="nsw", padx=4)
 
+dom_entry_from.grid(row=0, column=1, sticky="w", pady=2)
+dom_entry_to.grid(row=0, column=3, sticky="w", pady=2,)
+
+root.columnconfigure(5, weight=100) # Not sure what this actually does but it works lol
+generate_button.grid(row=0, column=4, padx=25, sticky="nse")
 
 
 # Constant Generators, Grid Entries
@@ -186,11 +222,6 @@ cons_entry_m.grid(row=1, column=2, pady=6)
 cons_entry_c.grid(row=3, column=2, pady=6)
 cons_entry_a.grid(row=1, column=5, pady=6)
 cons_entry_b.grid(row=3, column=5, pady=6)
-
-
-
-# Grid Generate Button
-#generate_button.grid(row=3, column=5, columnspan=3, rowspan=2, sticky="w")
 
 
 

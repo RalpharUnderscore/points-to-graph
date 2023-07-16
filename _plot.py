@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def GenerateGraph(graph_parameters, point_one, point_two, mode):
+def GenerateGraph(graph_parameters, mode, domain):
     
-    plt.figure("Graph")
-    x = np.linspace(point_one[0], point_two[0])
+    plt.figure("My Graph")
+    plt.title(f"Untitled {mode} Graph")
+    x = np.linspace(domain[0], domain[1])
 
     if mode == "Linear":
         y = LinGraph(graph_parameters, x)
