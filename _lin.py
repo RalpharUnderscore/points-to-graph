@@ -21,8 +21,8 @@ def CreateLinearGraph(point_one, point_two):
 
 if __name__ == "__main__":
     input("""This Python file does nothing when executed by the user.
-It contains the code for the calculation of a linear graph utilized by GraphGen.py
-Please open GraphGen.py to access the graph generator.
+It contains the code for the calculation of a linear graph utilized by GraphGen.pyw
+Please open GraphGen.pyw to access the graph generator.
 (Any input will terminate this program)
 """)
 

@@ -3,7 +3,6 @@ import webbrowser
 import _exp as exp
 import _lin as lin
 import _plot as plotpy
-import _ctrls as ctrls
 
 import tkinter as tk
 from tkinter import messagebox
@@ -106,7 +105,7 @@ def ReadPointValues():
     GraphGeneration(graph_parameters, mode, domain)
 
 
-def ReadConstantValues(): # TODO: Calculate for Read Constant Values
+def ReadConstantValues(): #// TODO: Calculate for Read Constant Values
     mode = selected_graphtype_cons.get()
     
     try:

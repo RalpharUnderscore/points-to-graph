@@ -37,7 +37,7 @@ def OpenWindow():
     root.geometry("380x370")
     root.resizable(False, False)
 
-    tk.Button(root, text="AAAAA", command=lambda: PlotPoint(0, 2)).grid(row=0, column=0)
+    tk.Button(root, text="AAAAA", command=lambda: PlotPoint(0, 2)).grid(row=0, column=0) # TODO: PlotPoint Function
     root.mainloop()
 
 def PlotPoint(x, y):
@@ -48,7 +48,7 @@ def PlotPoint(x, y):
 
 if __name__ == "__main__":
     input("""This Python file does nothing when executed by the user.
-It contains the code for the generation of the graph utilized by GraphGen.py
-Please open GraphGen.py to access the graph generator.
+It contains the code for the generation of the graph and the graph controls. Both of which are utilized by GraphGen.pyw
+Please open GraphGen.pyw to access the graph generator.
 (Any input will terminate this program)
 """)
