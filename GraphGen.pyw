@@ -3,8 +3,10 @@ import webbrowser
 import _exp as exp
 import _lin as lin
 import _plot as plotpy
+import _ctrls as ctrls
 
 import tkinter as tk
+from tkinter import messagebox
 from PIL import ImageTk, Image
 
 root = tk.Tk()
@@ -71,7 +73,6 @@ def CalculateButton():
 
 # Retrieve the point values the user input
 def ReadPointValues():
-    flagError = False
     try:
         x1 = float(twop_entry_x1.get())
         y1 = float(twop_entry_y1.get())
@@ -83,29 +84,58 @@ def ReadPointValues():
 
         domain = (domain_start, domain_end)
     except ValueError:
-        flagError = True
-
-
-    if flagError: return
+        messagebox.showerror(title="ValueError", message="ValueError: Missing or invalid values?")
+        return
 
     point_one = (x1, y1)
     point_two = (x2, y2)
 
     mode = selected_graphtype_twop.get()
-    if mode == "Linear":
-        graph_parameters = lin.CreateLinearGraph(point_one, point_two)
-        if graph_parameters == "Error": return
-    else:
-        graph_parameters = exp.CreateExponentialGraph(point_one, point_two)
-        if graph_parameters == "Error": return
 
-    plotpy.plt.close()
-    plotpy.GenerateGraph(graph_parameters, mode, domain)
+    if mode == "Linear": graph_parameters = lin.CreateLinearGraph(point_one, point_two)
+    else: graph_parameters = exp.CreateExponentialGraph(point_one, point_two)
+    
+    if not isinstance(graph_parameters, float):
+        if graph_parameters == "ZeroDivisionError": 
+            messagebox.showerror(title="ZeroDivisionError", message="ZeroDivisionError: Perhaps the x-values of the two points are the same?")
+            return
+        if graph_parameters == "ValueError": 
+            messagebox.showerror(title="ValueError", message="ValueError (domain error?): Make sure your y-values are > 0 when creating an exponential graph.")
+            return
+        
+    GraphGeneration(graph_parameters, mode, domain)
+
 
 def ReadConstantValues(): # TODO: Calculate for Read Constant Values
-    graphtype = selected_graphtype_cons.get()
-    if graphtype == "Linear":
-        pass
+    mode = selected_graphtype_cons.get()
+    
+    try:
+        domain_start = float(dom_entry_from.get())
+        domain_end = float(dom_entry_to.get())
+
+        if mode == "Linear":
+            valueone = float(cons_entry_m.get())
+            valuetwo = float(cons_entry_c.get())
+        else:
+            valueone = float(cons_entry_a.get())
+            valuetwo = float(cons_entry_b.get())
+    except ValueError:
+        messagebox.showerror(title="ValueError", message="ValueError: Missing or invalid values?")
+        return
+    
+    domain = (domain_start, domain_end)
+    
+    GraphGeneration((valueone, valuetwo), mode, domain)
+
+
+
+def GraphGeneration(graph_parameters, mode, domain):
+    plotpy.CloseWindow()
+    plotpy.plt.close()
+    plotpy.GenerateGraph(graph_parameters, mode, domain)
+    plotpy.OpenWindow()
+    
+    
 
 
 

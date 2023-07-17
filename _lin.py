@@ -1,5 +1,3 @@
-import math
-
 def Find_c(point_one, m):
     return point_one[1] - (m * point_one[0])
 
@@ -10,18 +8,16 @@ def Find_m(point_one, point_two):
     try:
         return numerator/denominator
     except ZeroDivisionError:
-        return "Error"
+        return "ZeroDivisionError"
     
 def CreateLinearGraph(point_one, point_two):
     m = Find_m(point_one, point_two)
-    if m != "Error":
+    if isinstance(m, float):
         c = Find_c(point_one, m)
         return (round(m, 8), round(c, 8)) # Prevent floating point shenanigans
     else:
-        return "Error"
+        return m
     
-
-
 
 if __name__ == "__main__":
     input("""This Python file does nothing when executed by the user.

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+import tkinter as tk
+
 def GenerateGraph(graph_parameters, mode, domain):
     
     plt.figure("My Graph")
@@ -21,6 +23,27 @@ def LinGraph(graph_parameters, x):
 
 def ExpGraph(graph_parameters, x): # NOTE TO SELF: if you're gonna use numpy might as well just use numpy's methods instead of math's
     return graph_parameters[0] * np.power(graph_parameters[1], x) # y = ab^x
+
+
+def CloseWindow():
+    global root
+    try: root.destroy()
+    except: pass
+
+def OpenWindow():
+    global root    
+    root = tk.Tk()
+    root.title("Graph Controls")
+    root.geometry("380x370")
+    root.resizable(False, False)
+
+    tk.Button(root, text="AAAAA", command=lambda: PlotPoint(0, 2)).grid(row=0, column=0)
+    root.mainloop()
+
+def PlotPoint(x, y):
+    plt.scatter([x], [y])
+
+
 
 
 if __name__ == "__main__":

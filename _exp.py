@@ -9,20 +9,20 @@ def Find_b(point_one, point_two):
     try: 
         numerator = (math.log(point_one[1])-math.log(point_two[1])) #www.wolframalpha.com saves the day
     except ValueError: 
-        return "Error"
+        return "ValueError"
     denominator = (point_one[0] - point_two[0])
     try:
         return math.pow(math.e, numerator/denominator)
     except ZeroDivisionError:
-        return "Error"
+        return "ZeroDivisionError"
     
 def CreateExponentialGraph(point_one, point_two):
     b = Find_b(point_one, point_two)
-    if b != "Error":
+    if isinstance(b, float):
         a = Find_a(point_one, b)
         return (round(a, 8), round(b, 8)) # Prevent floating point shenanigans
     else:
-        return "Error"
+        return b
     
 
 
