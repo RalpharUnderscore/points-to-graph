@@ -129,10 +129,9 @@ def ReadConstantValues(): #// TODO: Calculate for Read Constant Values
 
 
 def GraphGeneration(graph_parameters, mode, domain):
-    plotpy.CloseWindow()
     plotpy.plt.close()
     plotpy.GenerateGraph(graph_parameters, mode, domain)
-    plotpy.OpenWindow()
+    plotpy.InitWindow()
     
     
 
