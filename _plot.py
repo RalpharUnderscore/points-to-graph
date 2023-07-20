@@ -1,12 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 import _namelist as namelist
 
 import tkinter as tk
 
-def GenerateGraph(graph_parameters, mode, domain):
-    
+def GenerateGraph(local_graph_parameters, local_mode, local_domain):
+    # Sorry I really cannot figure out a better way to reuse these variables in other functions so I just added "local_"
+    global graph_parameters
+    global mode
+    global domain
+
+    graph_parameters = local_graph_parameters
+    mode = local_mode
+    domain = local_domain
+
     plt.figure("Graph")
     plt.title(namelist.RandomTitle(mode))
     x = np.linspace(domain[0], domain[1])
@@ -28,7 +37,12 @@ def ExpGraph(graph_parameters, x): # NOTE TO SELF: if you're gonna use numpy mig
 
 
 def InvertInputs():
+    global invert_inputs
+    global plot_entry_one
     global plot_entry_two
+    global plot_label_one
+    global plot_label_two
+    print(invert_inputs.get()) # TODO: Ran by GraphGen.pyw, always False
     if invert_inputs.get():
         plot_label_one["text"] = "y"
         plot_label_two["text"] = "x"
@@ -47,17 +61,54 @@ def InvertInputs():
 
     if lock_input.get(): 
         plot_entry_two["state"] = "readonly"
-  
-
-
-        
-
 
 def UnlockInput():
     if lock_input.get():
         plot_entry_two["state"] = "readonly"
     else:
         plot_entry_two["state"] = "normal"
+
+def CalculateEntryUpdate(graph_parameters, mode, domain):
+    # If 2nd Entry unlocked, don't do anything
+    if not lock_input.get(): return
+    
+    # If not float, 2nd Entry becomes blank
+    try: 
+        value = float(plot_entry_one.get())
+    except ValueError: 
+        return_value = ""
+        return EntryUpdate(return_value)
+
+    # Check to see which domain value is higher
+    if domain[0] <= domain[1]:
+        # If not in domain, undefined
+        if not (domain[0] <= value <= domain[1]):
+            return_value = "undefined"
+            return EntryUpdate(return_value)
+    else:
+         # If not in domain, undefined
+         if not (domain[1] <= value <= domain[0]):
+            return_value = "undefined"
+            return EntryUpdate(return_value)
+    
+    
+    if mode == "Linear": # If Linear Graph
+        if invert_inputs.get: return_value = (value - graph_parameters[1])/graph_parameters[0] # Inverted
+        else: return_value = (graph_parameters[0] * value) + graph_parameters[1] # Normal
+    else: # If Expo Graph
+        if invert_inputs.get: return_value = math.log((value/graph_parameters[0]), graph_parameters[1]) # Inverted
+        else: return_value = graph_parameters[0] * np.power(graph_parameters[1], value) # Normal
+
+    return EntryUpdate(return_value)
+
+def EntryUpdate(return_value):
+    plot_entry_two["state"] = "normal"
+    plot_entry_two.delete(0, tk.END)
+    plot_entry_two.insert(0, return_value)
+    plot_entry_two["state"] = "readonly"
+
+
+
 
 
 def InitWindow():
@@ -78,10 +129,7 @@ def InitWindow():
     root.resizable(False, False)
     
     invert_inputs = tk.BooleanVar()
-    invert_inputs.set(False)
-
     lock_input = tk.BooleanVar()
-    lock_input.set(True)
 
 
 
@@ -127,6 +175,7 @@ def InitWindow():
 
     plot_button.grid(row=3, column=9, rowspan=1, columnspan=3, sticky="e", padx=4, pady=4)
 
+    plot_entry_one.bind("<KeyRelease>", lambda _: CalculateEntryUpdate(graph_parameters, mode, domain))
     
 
     
@@ -147,7 +196,7 @@ def PlotPoint(x, y):
 
 
 
-InitWindow() # ! Delete after testing
+# InitWindow() # ! Delete after testing
 
 
 
