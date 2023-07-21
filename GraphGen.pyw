@@ -4,9 +4,14 @@ import _exp as exp
 import _lin as lin
 import _plot as plotpy
 
+import numpy as np
+import math
+
 import tkinter as tk
 from tkinter import messagebox
 from PIL import ImageTk, Image
+
+# ! NOTE TO SELF: Please don't use Python and tkinter for multi-windowed programs again. It is so difficult to manage.
 
 root = tk.Tk()
 root.title("Graph Generator")
@@ -72,6 +77,9 @@ def CalculateButton():
 
 # Retrieve the point values the user input
 def ReadPointValues():
+    global graph_parameters
+    global mode
+    global domain
     try:
         x1 = float(twop_entry_x1.get())
         y1 = float(twop_entry_y1.get())
@@ -98,8 +106,11 @@ def ReadPointValues():
         if graph_parameters == "ZeroDivisionError": 
             messagebox.showerror(title="ZeroDivisionError", message="ZeroDivisionError: Perhaps the x-values of the two points are the same?")
             return
+        if graph_parameters == "ZeroDivisionError 2": 
+            messagebox.showerror(title="ZeroDivisionError (case 2)", message="ZeroDivisionError (case 2?): Make sure the y-value of Point 1 is > 0 when creating an exponential graph.")
+            return
         if graph_parameters == "ValueError": 
-            messagebox.showerror(title="ValueError", message="ValueError (domain error?): Make sure your y-values are > 0 when creating an exponential graph.")
+            messagebox.showerror(title="ValueError", message="ValueError (likely root of negative created): Make sure the y-value of Point 2 is >= 0 when creating an exponential graph.")
             return
         
     GraphGeneration(graph_parameters, mode, domain)
@@ -119,7 +130,7 @@ def ReadConstantValues(): #// TODO: Calculate for Read Constant Values
             valueone = float(cons_entry_a.get())
             valuetwo = float(cons_entry_b.get())
     except ValueError:
-        messagebox.showerror(title="ValueError", message="ValueError: Missing or invalid values?")
+        messagebox.showerror(title="ValueError", message="ValueError: Missing or invalid values.")
         return
     
     domain = (domain_start, domain_end)
@@ -131,7 +142,7 @@ def ReadConstantValues(): #// TODO: Calculate for Read Constant Values
 def GraphGeneration(graph_parameters, mode, domain):
     plotpy.plt.close()
     plotpy.GenerateGraph(graph_parameters, mode, domain)
-    plotpy.InitWindow()
+    InitTopLevelWindow()
     
     
 
@@ -250,6 +261,202 @@ cons_entry_m.grid(row=1, column=2, pady=6)
 cons_entry_c.grid(row=3, column=2, pady=6)
 cons_entry_a.grid(row=1, column=5, pady=6)
 cons_entry_b.grid(row=3, column=5, pady=6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def InvertInputs():
+    global invert_inputs
+    global plot_entry_one
+    global plot_entry_two
+    global plot_label_one
+    global plot_label_two
+    if invert_inputs.get():
+        plot_label_one["text"] = "y"
+        plot_label_two["text"] = "x"
+    else:
+        plot_label_one["text"] = "x"
+        plot_label_two["text"] = "y"
+
+    plot_entry_two["state"] = "normal"
+
+    a = plot_entry_two.get()
+    plot_entry_two.delete(0, tk.END)
+    plot_entry_two.insert(0, plot_entry_one.get())
+
+    plot_entry_one.delete(0, tk.END)
+    plot_entry_one.insert(0, a)
+
+    if lock_input.get(): 
+        plot_entry_two["state"] = "readonly"
+
+def UnlockInput():
+    if lock_input.get():
+        plot_entry_two["state"] = "readonly"
+    else:
+        plot_entry_two["state"] = "normal"
+
+def CalculateEntryUpdate(graph_parameters, mode, domain):
+    # If 2nd Entry unlocked, don't do anything
+    if not lock_input.get(): return
+    
+    # If not float, 2nd Entry becomes blank
+    try: 
+        value = float(plot_entry_one.get())
+    except ValueError: 
+        return_value = ""
+        return EntryUpdate(return_value)
+
+    #// TODO: Right now undefined only checks for x values. Fix. FIX: whatever lol. just let them plot along the line's gradient even if its not in the domain
+    
+    #// TODO: Calculation is straight up wrong. FIX: Forgot to put brackets after .get() lol
+    if mode == "Linear": # If Linear Graph
+        if invert_inputs.get(): return_value = (value - graph_parameters[1])/graph_parameters[0] # Inverted
+        else: return_value = (graph_parameters[0] * value) + graph_parameters[1] # Normal
+    else: # If Expo Graph
+        if invert_inputs.get(): return_value = math.log((value/graph_parameters[0]), graph_parameters[1]) # Inverted
+        else: return_value = graph_parameters[0] * np.power(graph_parameters[1], value) # Normal
+
+
+    round_to = str(value)[::-1].find('.')
+    if round_to < 2:
+        return_value = round(return_value, 2)
+    else:
+        return_value = round(return_value, round_to)
+    return EntryUpdate(return_value)
+
+    
+
+def EntryUpdate(return_value):
+    plot_entry_two["state"] = "normal"
+    plot_entry_two.delete(0, tk.END)
+    plot_entry_two.insert(0, return_value)
+    plot_entry_two["state"] = "readonly"
+
+
+def InitTopLevelWindow():
+    # Amount of globals is horrendous lol
+    global toplevel
+    global plot_label_one
+    global plot_label_two
+    global plot_entry_one
+    global plot_entry_two
+    global invert_inputs
+    global lock_input
+
+    try: toplevel.destroy()
+    except: pass  
+    toplevel = tk.Toplevel(root)
+    toplevel.title("Plot Controls")
+    toplevel.geometry("380x370")
+    toplevel.resizable(False, False)
+    
+    invert_inputs = tk.BooleanVar()
+    invert_inputs.set(False)
+    lock_input = tk.BooleanVar()
+    lock_input.set(True)
+
+
+    # Create Frames
+    frame_plot = tk.LabelFrame(toplevel, text="Plotting")
+    frame_title = tk.LabelFrame(frame_plot, borderwidth=0)
+
+
+    # Create Labels and Entries
+    title_entry_name = tk.Entry(frame_title, width=15)
+    title_entry_color = tk.Entry(frame_title, width=7)
+
+    plot_checkbox_invert = tk.Checkbutton(frame_plot, text="Swap", variable=invert_inputs, offvalue=False, onvalue=True, command=InvertInputs)
+    plot_checkbox_lock = tk.Checkbutton(frame_plot, text="Lock 2nd Variable", variable=lock_input, offvalue=False, onvalue=True, command=UnlockInput)
+    plot_label_one = tk.Label(frame_plot, text="x", anchor="center") 
+    plot_label_two = tk.Label(frame_plot, text="y", anchor="center") 
+    
+    plot_entry_one = tk.Entry(frame_plot, width=7)
+    plot_entry_two = tk.Entry(frame_plot, width=7, state="readonly")
+
+    plot_button = tk.Button(frame_plot, text="Plot", height=2, width=10, bg="#f2c166", activebackground="#f2c166")
+
+
+    # Grid Frames
+    frame_title.grid(row=0, column=0, columnspan=10)
+    frame_plot.grid(row=1, column=0, sticky="w", padx=5)
+
+    # Grid frame_title
+    tk.Label(frame_title, text="Name (optional):").grid(row=0, column=0)
+    tk.Label(frame_title, text="Hex Color (optional):").grid(row=0, column=2)
+    title_entry_name.grid(row=0, column=1)
+    title_entry_color.grid(row=0, column=3, padx=5, sticky="nw")
+
+    # Grid frame_plot
+    plot_checkbox_invert.grid(row=1, column=0, sticky="w")
+    plot_label_one.grid(row=2, column=0, padx=0)
+    plot_label_two.grid(row=2, column=1, padx=18, sticky="w") # Just has to be 18 to be centered
+    plot_entry_one.grid(row=3, column=0, padx=0)
+    plot_entry_two.grid(row=3, column=1, padx=0, sticky="w")
+
+    plot_checkbox_lock.grid(row=3, column=2, sticky="w")
+
+    plot_button.grid(row=3, column=9, rowspan=1, columnspan=3, sticky="e", padx=4, pady=4)
+
+    plot_entry_one.bind("<KeyRelease>", lambda _: CalculateEntryUpdate(graph_parameters, mode, domain))
+    
+
+    
+
+
+
+    #tk.Button(frame_title, text='AAAAAAAAAAA', command=lambda: PlotPoint(2, 3)).grid(row=0, column=1)
+
+
+
+
+    toplevel.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
