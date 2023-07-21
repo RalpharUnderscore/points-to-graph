@@ -335,6 +335,19 @@ def CalculateEntryUpdate(graph_parameters, mode, domain):
         return EntryUpdate(return_value)
 
     #// TODO: Right now undefined only checks for x values. Fix. FIX: whatever lol. just let them plot along the line's gradient even if its not in the domain
+    '''
+    # Check to see which domain value is higher
+    if domain[0] <= domain[1]: 
+        # If not in domain, undefined
+        if not (domain[0] <= value <= domain[1]):
+            return_value = "N/A"
+            return EntryUpdate(return_value)
+    else:
+         # If not in domain, undefined
+         if not (domain[1] <= value <= domain[0]):
+            return_value = "N/A"
+            return EntryUpdate(return_value)
+    '''
     
     #// TODO: Calculation is straight up wrong. FIX: Forgot to put brackets after .get() lol
     if mode == "Linear": # If Linear Graph
