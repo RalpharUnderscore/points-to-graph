@@ -5,9 +5,16 @@ import math
 from tkinter import messagebox
 import _namelist as namelist
 
-def GenerateGraph(graph_parameters, mode, domain):
-    global PLOTDICT
-    PLOTDICT = {}
+PLOTDICT = {}
+
+def GenerateGraph(local_graph_parameters, local_mode, local_domain):
+    # writes unmaintainable code
+    global graph_parameters
+    global mode
+    global domain
+    graph_parameters = local_graph_parameters    
+    mode = local_mode    
+    domain = local_domain    
     
     plt.figure("Graph")
     plt.title(namelist.RandomTitle(mode))
@@ -49,18 +56,24 @@ def AddPointToDict(entryone, entrytwo, invert, name):
     
 
 def UpdatePoints():
-    
+    # ! Program crashes with no error message
+    plt.cla()
+    GenerateGraph(graph_parameters, mode, domain)
+
     X_VAL_LIST = []
     Y_VAL_LIST = []
 
     for value in PLOTDICT.values():
         X_VAL_LIST.append(value[0])
         Y_VAL_LIST.append(value[1])
-        temporary_points = plt.scatter(X_VAL_LIST, Y_VAL_LIST)
+        
+    temporary_points = plt.scatter(X_VAL_LIST, Y_VAL_LIST)
     
     for key, value in PLOTDICT.items():
-        plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
+        temporary_text = plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
 
+    print(PLOTDICT)
+    return
 
 
 

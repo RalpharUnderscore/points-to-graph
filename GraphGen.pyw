@@ -149,7 +149,8 @@ def GraphGeneration(local_graph_parameters, local_mode, domain):
     graph_parameters = local_graph_parameters
     mode = local_mode
     plotpy.plt.close()
-    plotpy.GenerateGraph(local_graph_parameters, mode, domain)
+    plotpy.PLOTDICT = {}
+    plotpy.GenerateGraph(graph_parameters, mode, domain)
     InitTopLevelWindow()
     
     
@@ -462,30 +463,6 @@ def InitTopLevelWindow():
 
 
     toplevel.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ToggleInputTypes() # Run function to disable unselected entries
 root.mainloop() # The Hog Rider card is unlocked from the Spell Valley (Arena 5). He is a very fast building-targeting, melee troop with moderately high hitpoints and damage. He appears just like his Clash of Clans counterpart; a man with brown eyebrows, a beard, a mohawk, and a golden body piercing in his left ear who is riding a hog. A Hog Rider card costs 4 Elixir to deploy.
