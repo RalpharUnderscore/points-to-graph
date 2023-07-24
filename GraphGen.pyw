@@ -3,6 +3,7 @@ import webbrowser
 import _exp as exp
 import _lin as lin
 import _plot as plotpy
+import _namelist as namelist
 
 import numpy as np
 import warnings
@@ -150,7 +151,8 @@ def GraphGeneration(local_graph_parameters, local_mode, domain):
     mode = local_mode
     plotpy.plt.close()
     plotpy.PLOTDICT = {}
-    plotpy.GenerateGraph(graph_parameters, mode, domain)
+    name = namelist.RandomTitle(mode)
+    plotpy.GenerateGraph(graph_parameters, mode, domain, name)
     InitTopLevelWindow()
     
     

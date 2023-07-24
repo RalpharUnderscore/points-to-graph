@@ -1,23 +1,23 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import math
-
-from tkinter import messagebox
 import _namelist as namelist
 
+from tkinter import messagebox
 PLOTDICT = {}
 
-def GenerateGraph(local_graph_parameters, local_mode, local_domain):
+def GenerateGraph(local_graph_parameters, local_mode, local_domain, local_name):
     # writes unmaintainable code
     global graph_parameters
     global mode
     global domain
+    global name
     graph_parameters = local_graph_parameters    
     mode = local_mode    
-    domain = local_domain    
+    domain = local_domain
+    name = local_name    
     
     plt.figure("Graph")
-    plt.title(namelist.RandomTitle(mode))
+    plt.title(name)
     x = np.linspace(domain[0], domain[1])
 
     if mode == "Linear":
@@ -47,18 +47,20 @@ def AddPointToDict(entryone, entrytwo, invert, name):
         messagebox.showerror(title="ValueError", message="ValueError: Missing or invalid values.")
         return
     
-    if name not in PLOTDICT:
-        PLOTDICT[name] = (x, y)
-        UpdatePoints()
-    else:
-        messagebox.showerror(title="NameOccupied", message="NameOccupied: A plot point with the same name is already in use. Select a different name or remove the old plot point")
-        return
+    if name == "":
+        name = namelist.RandomName()
+
+    while name in PLOTDICT:
+        name = f"{name} Jr."
+
+    PLOTDICT[name] = (x, y)
+    UpdatePoints()
     
 
 def UpdatePoints():
-    # ! Program crashes with no error message
+    #// ! Program crashes with no error message FIX: opted for plt.cla()
     plt.cla()
-    GenerateGraph(graph_parameters, mode, domain)
+    GenerateGraph(graph_parameters, mode, domain, name)
 
     X_VAL_LIST = []
     Y_VAL_LIST = []
@@ -72,7 +74,6 @@ def UpdatePoints():
     for key, value in PLOTDICT.items():
         temporary_text = plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
 
-    print(PLOTDICT)
     return
 
 
