@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+
 import _namelist as namelist
+import _gen as graphgen
 
 from tkinter import messagebox
 PLOTDICT = {}
@@ -69,12 +71,10 @@ def UpdatePoints():
         X_VAL_LIST.append(value[0])
         Y_VAL_LIST.append(value[1])
         
-    temporary_points = plt.scatter(X_VAL_LIST, Y_VAL_LIST)
+    plt.scatter(X_VAL_LIST, Y_VAL_LIST)
     
     for key, value in PLOTDICT.items():
-        temporary_text = plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
-
-    return
+        plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
 
 
 
