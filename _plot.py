@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import _namelist as namelist
-import _gen as graphgen
 
 from tkinter import messagebox
 PLOTDICT = {}
@@ -56,7 +55,7 @@ def AddPointToDict(entryone, entrytwo, invert, name):
         name = f"{name} Jr."
 
     PLOTDICT[name] = (x, y)
-    UpdatePoints()
+    return UpdatePoints()
     
 
 def UpdatePoints():
@@ -74,7 +73,10 @@ def UpdatePoints():
     plt.scatter(X_VAL_LIST, Y_VAL_LIST)
     
     for key, value in PLOTDICT.items():
-        plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom' 
+        plt.text(value[0], value[1], f'\n{key}\n({value[0]}, {value[1]})', horizontalalignment='left', verticalalignment='top', fontsize=9) # ? my honest reaction when 'left' 'top' aligns it 'right' 'bottom'
+
+    return PLOTDICT
+
 
 
 

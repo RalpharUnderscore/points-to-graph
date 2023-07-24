@@ -273,35 +273,7 @@ cons_entry_c.grid(row=3, column=2, pady=6)
 cons_entry_a.grid(row=1, column=5, pady=6)
 cons_entry_b.grid(row=3, column=5, pady=6)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ####################################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def InvertInputs():
     global invert_inputs
@@ -389,10 +361,27 @@ def EntryUpdate(return_value):
     plot_entry_two.insert(0, return_value)
     plot_entry_two["state"] = "readonly"
 
+def DictUIUpdate():
+    PLOTDICT = plotpy.AddPointToDict(plot_entry_one.get(), plot_entry_two.get(), invert_inputs.get(), title_entry_name.get())
+    if not isinstance(PLOTDICT, dict): return
+    
+    for widget in frame_dict.winfo_children():
+        widget.destroy()
+
+    i = 0
+    for key, values in PLOTDICT.items():
+        temp_entry = tk.Entry(frame_dict, width=20, borderwidth=1)
+        temp_entry.grid(row=i, column=0, padx=20)
+        temp_entry.insert(0, key)
+        temp_entry["state"] = "readonly"
+        i += 1
+
+
 
 def InitTopLevelWindow():
     # Amount of globals is horrendous lol
     global toplevel
+    global frame_dict
     global title_entry_name
     global plot_label_one
     global plot_label_two
@@ -416,8 +405,9 @@ def InitTopLevelWindow():
 
     # Create Frames
     frame_plot = tk.LabelFrame(toplevel, text="Plotting")
-    frame_title = tk.LabelFrame(frame_plot, borderwidth=0)
+    frame_dict = tk.LabelFrame(toplevel, text="Plot Controls")
 
+    frame_title = tk.LabelFrame(frame_plot, borderwidth=0)
 
     # Create Labels and Entries
     title_entry_name = tk.Entry(frame_title, width=15)
@@ -430,12 +420,13 @@ def InitTopLevelWindow():
     plot_entry_one = tk.Entry(frame_plot, width=7)
     plot_entry_two = tk.Entry(frame_plot, width=7, state="readonly")
 
-    plot_button = tk.Button(frame_plot, text="Plot", height=2, width=10, bg="#f2c166", activebackground="#f2c166", command=lambda: plotpy.AddPointToDict(plot_entry_one.get(), plot_entry_two.get(), invert_inputs.get(), title_entry_name.get()))
+    plot_button = tk.Button(frame_plot, text="Plot", height=2, width=10, bg="#f2c166", activebackground="#f2c166", command=DictUIUpdate)
 
 
     # Grid Frames
     frame_title.grid(row=0, column=0, columnspan=10, sticky="w")
-    frame_plot.grid(row=1, column=0, sticky="w", padx=5)
+    frame_plot.grid(row=0, column=0, sticky="w", padx=5)
+    frame_dict.grid(row=1, column=0, sticky="w", padx=5)
 
     # Grid frame_title
     tk.Label(frame_title, text="Name (optional):").grid(row=0, column=0)
@@ -454,7 +445,6 @@ def InitTopLevelWindow():
     
     plot_entry_one.bind("<KeyRelease>", lambda _: CalculateEntryUpdate(graph_parameters, mode))
     
-
     
 
 
