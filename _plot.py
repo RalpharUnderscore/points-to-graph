@@ -37,6 +37,10 @@ def ExpGraph(graph_parameters, x): # NOTE TO SELF: if you're gonna use numpy mig
     return graph_parameters[0] * np.power(graph_parameters[1], x) # y = ab^x
 
 def AddPointToDict(entryone, entrytwo, invert, name):
+    if len(PLOTDICT) >= 10:
+       messagebox.showerror(title="MaximumPointsReached", message="MaximumPointsReached: Maximum (10) number of points reached! Please remove a point to free up space!") 
+       return
+
     try:
         if invert:
             y = float(entryone)
@@ -57,6 +61,11 @@ def AddPointToDict(entryone, entrytwo, invert, name):
     PLOTDICT[name] = (x, y)
     return UpdatePoints()
     
+def RemovePointFromDict(key_index):
+    PLOTLIST = list(PLOTDICT.keys())
+    del PLOTDICT[PLOTLIST[key_index]]
+    return UpdatePoints()
+
 
 def UpdatePoints():
     #// ! Program crashes with no error message FIX: opted for plt.cla()

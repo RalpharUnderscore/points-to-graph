@@ -347,13 +347,15 @@ def CalculateEntryUpdate(graph_parameters, mode):
 
 
     round_to = str(value)[::-1].find('.')
-    if round_to < 2:
-        return_value = round(return_value, 2)
-    else:
-        return_value = round(return_value, round_to)
-    return EntryUpdate(return_value)
-
-    
+    try: 
+        if round_to < 2:
+            return_value = round(return_value, 2)
+        else:
+            return_value = round(return_value, round_to)
+        return EntryUpdate(return_value)
+    except TypeError: # Sometimes this happens randomly if you type the negative sign
+        return_value = ""
+        return EntryUpdate(return_value)
 
 def EntryUpdate(return_value):
     plot_entry_two["state"] = "normal"
@@ -361,19 +363,34 @@ def EntryUpdate(return_value):
     plot_entry_two.insert(0, return_value)
     plot_entry_two["state"] = "readonly"
 
-def DictUIUpdate():
-    PLOTDICT = plotpy.AddPointToDict(plot_entry_one.get(), plot_entry_two.get(), invert_inputs.get(), title_entry_name.get())
+def DictUIUpdate(command, key_index=None):
+    
+    if command == "Add":
+        PLOTDICT = plotpy.AddPointToDict(plot_entry_one.get(), plot_entry_two.get(), invert_inputs.get(), title_entry_name.get())
+    else:
+        PLOTDICT = plotpy.RemovePointFromDict(key_index)
+    
     if not isinstance(PLOTDICT, dict): return
     
     for widget in frame_dict.winfo_children():
         widget.destroy()
 
     i = 0
-    for key, values in PLOTDICT.items():
-        temp_entry = tk.Entry(frame_dict, width=20, borderwidth=1)
-        temp_entry.grid(row=i, column=0, padx=20)
-        temp_entry.insert(0, key)
-        temp_entry["state"] = "readonly"
+    for key, value in PLOTDICT.items():
+        # Remove Button
+        temp_remove = tk.Button(frame_dict, text="X", font="TkDefaultFont 7", height=1, width=2, bg="#ff6161", activebackground="#ff6161", command=lambda row=i: DictUIUpdate("Remove", row))
+        temp_remove.grid(row=i, column=0, padx=5)
+        # Show Name
+        temp_name = tk.Entry(frame_dict, width=20, borderwidth=0)
+        temp_name.grid(row=i, column=1, padx=5)
+        temp_name.insert(0, key)
+        temp_name["state"] = "readonly"
+        # Show Coordinates
+        temp_coords = tk.Entry(frame_dict, width=23, borderwidth=0)
+        temp_coords.grid(row=i, column=2, padx=5)
+        temp_coords.insert(0, f"({value[0]}, {value[1]})")
+        temp_coords["state"] = "readonly"
+
         i += 1
 
 
@@ -393,7 +410,7 @@ def InitTopLevelWindow():
     try: toplevel.destroy()
     except: pass  
     toplevel = tk.Toplevel(root)
-    toplevel.title("Plot Controls")
+    toplevel.title("Graph Controls")
     toplevel.geometry("330x370")
     toplevel.resizable(False, False)
     
@@ -405,7 +422,7 @@ def InitTopLevelWindow():
 
     # Create Frames
     frame_plot = tk.LabelFrame(toplevel, text="Plotting")
-    frame_dict = tk.LabelFrame(toplevel, text="Plot Controls")
+    frame_dict = tk.LabelFrame(toplevel, text="Point Controls")
 
     frame_title = tk.LabelFrame(frame_plot, borderwidth=0)
 
@@ -420,7 +437,7 @@ def InitTopLevelWindow():
     plot_entry_one = tk.Entry(frame_plot, width=7)
     plot_entry_two = tk.Entry(frame_plot, width=7, state="readonly")
 
-    plot_button = tk.Button(frame_plot, text="Plot", height=2, width=10, bg="#f2c166", activebackground="#f2c166", command=DictUIUpdate)
+    plot_button = tk.Button(frame_plot, text="Plot", height=2, width=10, bg="#f2c166", activebackground="#f2c166", command=lambda: DictUIUpdate("Add"))
 
 
     # Grid Frames

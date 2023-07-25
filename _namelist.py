@@ -91,7 +91,7 @@ def RandomName():
         "Nicholas",
         "Cage",
         "Brian",
-        "Parson"
+        "Parson",
         "Bryan",
         "Danny",
         "Jean",
@@ -142,8 +142,11 @@ def RandomName():
         "Java",
         "Doom",
         "Daisy",
-        "Sunny"
+        "Sunny",
+        "Duncan",
+        "Drummond",
         "Christodoulou",
+        "Monika",
         "Mullins",
         "Szymanski",
         "Charles",
@@ -159,7 +162,6 @@ def RandomName():
         "Log",
         "Moony",
         "Sungwon",
-        "Cho",
         "Madeline",
         "Celeste",
         "Lena",
@@ -169,7 +171,12 @@ def RandomName():
         "Hikari",
         "Ib",
         "Amy",
-        "Martin"
+        "Martin",
+        "Adrian",
+        "Shepard",
+        "Wallace",
+        "Breen",
+        "Wheatley",
     ]
 
     return random.choice(NAME_LIST)
