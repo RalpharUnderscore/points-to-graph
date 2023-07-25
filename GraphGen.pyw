@@ -213,7 +213,7 @@ generate_button = tk.Button(frame_domain, text="Generate New Graph", height=2, b
 
 # Grid Links
 tk.Button(frame_links, text="Linear Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/kwi1uxjyev")).grid(row=1, column=0, padx=1, pady=5, sticky="e")
-tk.Button(frame_links, text="Exponential Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/ggrnu5cx7x")).grid(row=1, column=1, padx=1, pady=5, sticky="e")
+tk.Button(frame_links, text="Exponential Graph", bg="#60d15c", activebackground="#60d15c", command=lambda: webbrowser.open("https://www.desmos.com/calculator/n04xtodhq4")).grid(row=1, column=1, padx=1, pady=5, sticky="e")
 tk.Button(frame_links, text="Github", bg="#343634", fg="#ffffff", activebackground="#343634", activeforeground="#ffffff", command=lambda: webbrowser.open("https://github.com/RalpharUnderscore/simple-graph-gen")).grid(row=1, column=2, padx=1, pady=5, sticky="e")
 
 
