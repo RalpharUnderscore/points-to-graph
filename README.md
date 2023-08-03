@@ -12,12 +12,12 @@ If you would like to experiment more with how the graph is calculated, I recomme
 
 ## FAQ (Frequently Asked Questions that I made up and were not frequently asked at all):
 Q: Why did you even make this?  
-A: Serious Answer. This is my 3rd tkinter project I've worked on. I was thinking of developing my first "serious" video game.  
-I wanted it to be mechanically simple to program since it was my first one so I thought about clicker games. As I thought more  
-about it I came to realize that setting the cost for each level of an upgrade would be very time-consuming. The solution I'm opting  
-for is to manually set values for the first and last level of the upgrade and have everything in between to be filled in by an exponential graph. I decided to create a python script that would return the y value for every x value in between the two points  
-the user inputs. A month later after not using tkinter for a while I decided to work on this project just to see if I could do it.  
-This program is a lot bigger than my last one.  
+A: Serious Answer. This is my 3rd tkinter project I've worked on. I was thinking of developing my first "serious" video game. 
+I wanted it to be mechanically simple to program since it was my first one so I thought about clicker games. As I thought more 
+about it I came to realize that setting the cost for each level of an upgrade would be very time-consuming. The solution I'm opting 
+for is to manually set values for the first and last level of the upgrade and have everything in between to be filled in by an exponential graph. I decided to create a python script that would return the y value for every x value in between the two points 
+the user inputs. A month later after not using tkinter for a while I decided to work on this project just to see if I could do it. 
+This program is a lot bigger than my last one. 
   
 TLDR: Mainly made it just because it was fun.  
   
