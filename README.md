@@ -21,18 +21,18 @@ This program is a lot bigger than my last one.
   
 TLDR: Mainly made it just because it was fun.  
   
-Q: How long did this take?
+Q: How long did this take?  
 A: I'm not too consistent updates. I just update whenever I feel like it but the Initial Github commit is July 8th. v1.0 will go live on Jul 25th.  
   
-Q: The code is horrendous.
+Q: The code is horrendous.  
 A: First of all, that's not a question. Second of all, you are absolutely right. Writing code is not difficult once you learn the  
 ropes. Code readiability and optimization is a whole other beast I'm trying to work on.  
-
+  
 Q: Why is the maximum amount of points 10?  
 A: It's a clean number to end at. Also, additional ones wouldn't fit inside the window. 
 If you would like to circumvent this, replace Line 415 in GraphGen.pyw from toplevel.resizable(False, False) -> toplevel.resizable(True, True)  
 Then, comment out Line 40-42 in _plot.py by putting # in front.  
-You should be able to resize the Graph Controls window and there won't be a limit anymore.
+You should be able to resize the Graph Controls window and there won't be a limit anymore.  
   
 Q: Where is are the list of randomly generated titles and point names stored?  
 A: In _namelist.py  
@@ -44,7 +44,7 @@ Q: Don't you think spliting the calculation into _lin.py and _exp.py is unnecess
 A: Yeah probably lol  
   
 Q: Self-Promotion?  
-A: I'm glad you asked. 
+A: I'm glad you asked.  
 https://github.com/RalpharUnderscore?tab=repositories  
 https://hiddenkendo.itch.io/pizza-escape  
 https://soundcloud.com/ralpharisntcool  
